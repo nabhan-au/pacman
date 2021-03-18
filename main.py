@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 from gamelib import Sprite, GameApp, Text
 
@@ -21,6 +22,9 @@ class Pacman(Sprite):
         self.direction = DIR_STILL
         self.next_direction = DIR_STILL
 
+        self.is_super_speed = False
+        self.super_speed_counter = 0
+
         x, y = maze.piece_center(r,c)
         super().__init__(app, 'images/pacman.png', x, y)
 
@@ -30,14 +34,27 @@ class Pacman(Sprite):
 
             if self.maze.has_dot_at(r, c):
                 self.maze.eat_dot_at(r, c)
+                if random.random() < 0.1:
+                    if not self.is_super_speed:
+                        self.is_super_speed = True
+                        self.super_speed_counter = 0
             
             if self.maze.is_movable_direction(r, c, self.next_direction):
                 self.direction = self.next_direction
             else:
                 self.direction = DIR_STILL
+            
+        if self.is_super_speed:
+            speed = 2 * PACMAN_SPEED
+            print("super state")
+            self.super_speed_counter += 1
+            if self.super_speed_counter > 50:
+                self.is_super_speed = False
+        else:
+            speed = PACMAN_SPEED
 
-        self.x += PACMAN_SPEED * DIR_OFFSET[self.direction][0]
-        self.y += PACMAN_SPEED * DIR_OFFSET[self.direction][1]
+        self.x += speed * DIR_OFFSET[self.direction][0]
+        self.y += speed * DIR_OFFSET[self.direction][1]
 
     def set_next_direction(self, direction):
         self.next_direction = direction
@@ -80,6 +97,14 @@ class PacmanGame(GameApp):
             self.pacman2.set_next_direction(DIR_DOWN)
         elif event.char.upper() == 'L':
             self.pacman2.set_next_direction(DIR_RIGHT)
+
+class NormalPaceState:
+    def __init__(self,pacman):
+        self.pacman = pacman
+
+class SuperPaceState:
+    def __init__(self,pacman):
+        self.pacman = pacman
 
 if __name__ == "__main__":
     root = tk.Tk()
