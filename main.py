@@ -6,6 +6,7 @@ from gamelib import Sprite, GameApp, Text
 from dir_consts import *
 from maze import Maze
 
+
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
 
@@ -18,6 +19,8 @@ class Pacman(Sprite):
         self.r = r
         self.c = c
         self.maze = maze
+
+        self.dot_eaten_observer = []
 
         self.direction = DIR_STILL
         self.next_direction = DIR_STILL
@@ -49,11 +52,16 @@ class Pacman(Sprite):
 
             if self.maze.has_dot_at(r, c):
                 self.maze.eat_dot_at(r, c)
+<<<<<<< HEAD
 
                 ## Notes: 1st operation
                 ## 
                 self.state.random_upgrade()
 
+=======
+                for i in self.dot_eaten_observer:
+                    i()
+>>>>>>> origin/dev1
             if self.maze.is_movable_direction(r, c, self.next_direction):
                 self.direction = self.next_direction
             else:
@@ -70,15 +78,19 @@ class Pacman(Sprite):
 class PacmanGame(GameApp):
     def init_game(self):
         self.maze = Maze(self, CANVAS_WIDTH, CANVAS_HEIGHT)
-
-        self.pacman1 = Pacman(self, self.maze, 1, 1)
-        self.pacman2 = Pacman(self, self.maze, self.maze.get_height() - 2, self.maze.get_width() - 2)
-
+        self.pacman1_score = 0
+        self.pacman2_score = 0
         self.pacman1_score_text = Text(self, 'P1: 0', 100, 20)
         self.pacman2_score_text = Text(self, 'P2: 0', 600, 20)
+        self.pacman1 = Pacman(self, self.maze, 1, 1)
+        self.pacman2 = Pacman(self, self.maze, self.maze.get_height() - 2, self.maze.get_width() - 2)
+        
+        self.pacman1.dot_eaten_observer.append(self.dot_eaten_by_pacman1)
+        self.pacman2.dot_eaten_observer.append(self.dot_eaten_by_pacman2)
 
         self.elements.append(self.pacman1)
         self.elements.append(self.pacman2)
+
 
     def pre_update(self):
         pass
@@ -105,6 +117,7 @@ class PacmanGame(GameApp):
         elif event.char.upper() == 'L':
             self.pacman2.set_next_direction(DIR_RIGHT)
 
+<<<<<<< HEAD
 class NormalPacmanState:
     def __init__(self,pacman):
         self.pacman = pacman
@@ -139,11 +152,24 @@ class SuperPacmanState:
             self.counter += 1
         print(self.counter)
 
+=======
+    def dot_eaten_by_pacman1(self):
+        self.pacman1_score += 1
+        self.update_scores()
+
+    def dot_eaten_by_pacman2(self):
+        self.pacman2_score += 1
+        self.update_scores()
+
+    def update_scores(self):
+        self.pacman1_score_text.set_text(f'p1 : {self.pacman1_score}')
+        self.pacman2_score_text.set_text(f'p2 : {self.pacman2_score}')
+>>>>>>> origin/dev1
 
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Monkey Banana Game")
- 
+
     # do not allow window resizing
     root.resizable(False, False)
     app = PacmanGame(root, CANVAS_WIDTH, CANVAS_HEIGHT, UPDATE_DELAY)
