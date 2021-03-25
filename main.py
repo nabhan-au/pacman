@@ -52,16 +52,13 @@ class Pacman(Sprite):
 
             if self.maze.has_dot_at(r, c):
                 self.maze.eat_dot_at(r, c)
-<<<<<<< HEAD
 
                 ## Notes: 1st operation
                 ## 
                 self.state.random_upgrade()
 
-=======
                 for i in self.dot_eaten_observer:
                     i()
->>>>>>> origin/dev1
             if self.maze.is_movable_direction(r, c, self.next_direction):
                 self.direction = self.next_direction
             else:
@@ -117,7 +114,18 @@ class PacmanGame(GameApp):
         elif event.char.upper() == 'L':
             self.pacman2.set_next_direction(DIR_RIGHT)
 
-<<<<<<< HEAD
+    def dot_eaten_by_pacman1(self):
+        self.pacman1_score += 1
+        self.update_scores()
+
+    def dot_eaten_by_pacman2(self):
+        self.pacman2_score += 1
+        self.update_scores()
+
+    def update_scores(self):
+        self.pacman1_score_text.set_text(f'p1 : {self.pacman1_score}')
+        self.pacman2_score_text.set_text(f'p2 : {self.pacman2_score}')
+
 class NormalPacmanState:
     def __init__(self,pacman):
         self.pacman = pacman
@@ -150,21 +158,7 @@ class SuperPacmanState:
             self.pacman.x += self.speed * DIR_OFFSET[self.pacman.direction][0]
             self.pacman.y += self.speed * DIR_OFFSET[self.pacman.direction][1]
             self.counter += 1
-        print(self.counter)
 
-=======
-    def dot_eaten_by_pacman1(self):
-        self.pacman1_score += 1
-        self.update_scores()
-
-    def dot_eaten_by_pacman2(self):
-        self.pacman2_score += 1
-        self.update_scores()
-
-    def update_scores(self):
-        self.pacman1_score_text.set_text(f'p1 : {self.pacman1_score}')
-        self.pacman2_score_text.set_text(f'p2 : {self.pacman2_score}')
->>>>>>> origin/dev1
 
 if __name__ == "__main__":
     root = tk.Tk()
